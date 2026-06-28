@@ -707,6 +707,68 @@ a {
     opacity: 0.4;
 }
 
+/* Card "Learn More" link */
+.card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+    padding: 8px 0;
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--accent-2);
+    transition: all 0.3s var(--ease-out);
+    position: relative;
+}
+
+.card-link::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 0;
+    width: 0;
+    height: 1.5px;
+    background: var(--accent-gradient);
+    border-radius: 1px;
+    transition: width 0.35s var(--ease-out);
+}
+
+.card-link:hover {
+    color: var(--text-primary);
+}
+
+.card-link:hover::after {
+    width: calc(100% - 22px);
+}
+
+.card-link svg {
+    transition: transform 0.3s var(--ease-out);
+    flex-shrink: 0;
+}
+
+.card-link:hover svg {
+    transform: translateX(4px);
+}
+
+@media (hover: none) {
+    .card-link:active {
+        color: var(--text-primary);
+    }
+    .card-link:active::after {
+        width: calc(100% - 22px);
+    }
+    .card-link:active svg {
+        transform: translateX(4px);
+    }
+}
+
+@media (pointer: coarse) {
+    .card-link {
+        min-height: 44px;
+        padding: 12px 0;
+    }
+}
+
 /* ============================================
    CTA Section
    ============================================ */
