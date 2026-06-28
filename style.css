@@ -833,14 +833,156 @@ a {
 }
 
 /* ============================================
-   Responsive
+   Responsive — Full Device Coverage
    ============================================ */
 
+/* --- Safe area support (notched iPhones, Android cutouts) --- */
+@supports (padding: env(safe-area-inset-top)) {
+    .navbar {
+        padding-top: max(16px, env(safe-area-inset-top));
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
+
+    .navbar.scrolled {
+        padding-top: max(10px, env(safe-area-inset-top));
+    }
+
+    .hero {
+        padding-left: max(24px, env(safe-area-inset-left));
+        padding-right: max(24px, env(safe-area-inset-right));
+    }
+
+    .services {
+        padding-left: max(24px, env(safe-area-inset-left));
+        padding-right: max(24px, env(safe-area-inset-right));
+    }
+
+    .footer {
+        padding-bottom: max(48px, calc(24px + env(safe-area-inset-bottom)));
+    }
+}
+
+/* --- Touch target enforcement (all touch devices) --- */
+@media (pointer: coarse) {
+    .btn {
+        min-height: 48px;
+        min-width: 48px;
+    }
+
+    .nav-link {
+        padding: 12px 8px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-toggle {
+        min-width: 44px;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .tag {
+        padding: 6px 14px;
+        font-size: 0.78rem;
+    }
+}
+
+/* --- Hover-only effects (non-touch devices) --- */
+@media (hover: hover) and (pointer: fine) {
+    .service-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 40px rgba(108, 92, 231, 0.06);
+    }
+
+    .service-card.visible:hover {
+        transform: translateY(-6px);
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+    }
+
+    .btn-ghost:hover {
+        transform: translateY(-2px);
+    }
+}
+
+/* Disable hover transforms on touch */
+@media (hover: none) {
+    .service-card:hover {
+        transform: none;
+        box-shadow: none;
+    }
+
+    .service-card.visible:hover {
+        transform: none;
+    }
+
+    .btn-primary:hover {
+        transform: none;
+    }
+
+    .btn-ghost:hover {
+        transform: none;
+    }
+
+    /* Active states for touch feedback instead */
+    .btn-primary:active {
+        transform: scale(0.97);
+        box-shadow: 0 2px 12px rgba(108, 92, 231, 0.4);
+    }
+
+    .btn-ghost:active {
+        transform: scale(0.97);
+        background: rgba(108, 92, 231, 0.12);
+    }
+
+    .service-card:active {
+        border-color: var(--border-hover);
+        background: var(--bg-card-hover);
+    }
+}
+
+/* --- Ultrawide & large monitors (1440px+) --- */
+@media (min-width: 1440px) {
+    :root {
+        --container: 1320px;
+    }
+
+    .hero-title {
+        font-size: 4.2rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 28px;
+    }
+
+    .orbit-container {
+        width: 400px;
+        height: 400px;
+    }
+
+    .hero-visual {
+        flex: 0 0 420px;
+    }
+}
+
+/* --- Tablets & small laptops (1024px) --- */
 @media (max-width: 1024px) {
     .hero {
         flex-direction: column;
         text-align: center;
-        padding-top: 140px;
+        padding-top: 130px;
+        gap: 40px;
     }
 
     .hero-content {
@@ -849,6 +991,8 @@ a {
 
     .hero-subtitle {
         max-width: 100%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .hero-actions {
@@ -862,8 +1006,23 @@ a {
     .hero-visual {
         flex: 0 0 auto;
     }
+
+    .orbit-container {
+        width: 280px;
+        height: 280px;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .cta-container {
+        padding: 56px 36px;
+    }
 }
 
+/* --- Tablet portrait & large phones (768px) --- */
 @media (max-width: 768px) {
     .nav-links {
         position: fixed;
@@ -871,14 +1030,17 @@ a {
         right: -100%;
         width: 280px;
         height: 100vh;
+        height: 100dvh;
         background: rgba(6, 8, 13, 0.97);
         backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
         flex-direction: column;
         justify-content: center;
         gap: 24px;
         padding: 40px;
         transition: right 0.4s var(--ease-out);
         border-left: 1px solid var(--border-color);
+        z-index: 999;
     }
 
     .nav-links.open {
@@ -902,39 +1064,89 @@ a {
     }
 
     .hero {
-        padding-top: 120px;
+        padding-top: 110px;
+        padding-bottom: 60px;
         min-height: auto;
     }
 
+    .hero-title {
+        font-size: clamp(1.8rem, 6vw, 2.6rem);
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
     .hero-stats {
-        flex-direction: column;
-        gap: 16px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .stat {
+        flex: 1;
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 1.6rem;
+    }
+
+    .stat-suffix {
+        font-size: 1.1rem;
     }
 
     .stat-divider {
-        width: 40px;
-        height: 1px;
+        display: none;
     }
 
     .hero-visual {
         display: none;
     }
 
+    .services {
+        padding: 60px 16px 80px;
+    }
+
     .services-grid {
         grid-template-columns: 1fr;
+        gap: 16px;
     }
 
     .service-card {
-        padding: 28px;
+        padding: 28px 24px;
+    }
+
+    .section-header {
+        margin-bottom: 40px;
+    }
+
+    .section-desc {
+        font-size: 0.95rem;
+    }
+
+    .cta-section {
+        padding: 60px 16px 80px;
     }
 
     .cta-container {
         padding: 48px 24px;
+        border-radius: var(--radius-lg);
     }
 
     .cta-actions {
         flex-direction: column;
-        align-items: center;
+        align-items: stretch;
+    }
+
+    .btn-lg {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .footer {
+        padding: 36px 16px;
     }
 
     .footer-top {
@@ -943,27 +1155,635 @@ a {
         text-align: center;
     }
 
-    .btn-lg {
-        width: 100%;
-        justify-content: center;
+    .bg-glow-1 {
+        width: 350px;
+        height: 350px;
+    }
+
+    .bg-glow-2 {
+        width: 300px;
+        height: 300px;
+    }
+
+    .bg-glow-3 {
+        width: 250px;
+        height: 250px;
     }
 }
 
-@media (max-width: 420px) {
+/* --- Small phones (480px) --- */
+@media (max-width: 480px) {
+    .hero {
+        padding: 100px 16px 48px;
+    }
+
     .hero-title {
-        font-size: 2rem;
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+        line-height: 1.15;
     }
 
     .hero-badge {
         margin-bottom: 20px;
+        padding: 5px 12px 5px 8px;
+    }
+
+    .badge-text {
+        font-size: 0.72rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.92rem;
+        line-height: 1.65;
+        margin-bottom: 28px;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
+
+    .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 14px 20px;
+    }
+
+    .hero-stats {
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .stat-number {
+        font-size: 1.4rem;
+    }
+
+    .stat-label {
+        font-size: 0.7rem;
+    }
+
+    .section-tag {
+        font-size: 0.72rem;
+        padding: 5px 12px;
     }
 
     .section-title {
-        font-size: 1.7rem;
+        font-size: clamp(1.4rem, 5.5vw, 1.8rem);
+    }
+
+    .section-desc {
+        font-size: 0.88rem;
+    }
+
+    .services {
+        padding: 48px 12px 64px;
+    }
+
+    .services-grid {
+        gap: 14px;
+    }
+
+    .service-card {
+        padding: 24px 20px;
+        border-radius: var(--radius-lg);
+    }
+
+    .card-icon {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+    }
+
+    .card-icon svg {
+        width: 26px;
+        height: 26px;
     }
 
     .card-title {
+        font-size: 1.15rem;
+    }
+
+    .card-desc {
+        font-size: 0.87rem;
+        line-height: 1.65;
+        margin-bottom: 16px;
+    }
+
+    .card-number {
+        top: 22px;
+        right: 22px;
+        font-size: 0.7rem;
+    }
+
+    .card-tags {
+        gap: 6px;
+    }
+
+    .tag {
+        padding: 4px 10px;
+        font-size: 0.7rem;
+    }
+
+    .cta-section {
+        padding: 48px 12px 64px;
+    }
+
+    .cta-container {
+        padding: 36px 20px;
+    }
+
+    .cta-title {
+        font-size: 1.5rem;
+    }
+
+    .cta-desc {
+        font-size: 0.92rem;
+        margin-bottom: 28px;
+    }
+
+    .footer-brand {
+        font-size: 0.9rem;
+    }
+
+    .footer-tagline {
+        font-size: 0.8rem;
+    }
+
+    .footer-copy {
+        font-size: 0.75rem;
+    }
+
+    .nav-container {
+        padding: 0 16px;
+    }
+
+    .logo-text {
+        font-size: 0.95rem;
+    }
+
+    .logo-icon {
+        width: 32px;
+        height: 32px;
         font-size: 1.2rem;
+    }
+}
+
+/* --- Extra small phones (360px and below) --- */
+@media (max-width: 360px) {
+    .hero {
+        padding: 90px 12px 40px;
+    }
+
+    .hero-title {
+        font-size: 1.5rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.85rem;
+    }
+
+    .hero-badge {
+        padding: 4px 10px 4px 7px;
+    }
+
+    .badge-text {
+        font-size: 0.68rem;
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+    }
+
+    .service-card {
+        padding: 20px 16px;
+    }
+
+    .card-title {
+        font-size: 1.05rem;
+    }
+
+    .card-desc {
+        font-size: 0.82rem;
+    }
+
+    .cta-container {
+        padding: 28px 16px;
+    }
+
+    .cta-title {
+        font-size: 1.3rem;
+    }
+
+    .cta-desc {
+        font-size: 0.85rem;
+    }
+
+    .nav-links {
+        width: 240px;
+        padding: 32px 24px;
+    }
+
+    .stat {
+        min-width: 60px;
+    }
+
+    .stat-number {
+        font-size: 1.2rem;
+    }
+
+    .stat-label {
+        font-size: 0.65rem;
+    }
+
+    .btn {
+        font-size: 0.88rem;
+        padding: 12px 16px;
+    }
+
+    .btn-lg {
+        padding: 14px 20px;
+        font-size: 0.9rem;
+    }
+}
+
+/* --- Landscape phones (short + wide) --- */
+@media (max-height: 500px) and (orientation: landscape) {
+    .hero {
+        min-height: auto;
+        padding-top: 80px;
+        padding-bottom: 40px;
+        flex-direction: row;
+        text-align: left;
+        gap: 32px;
+        align-items: center;
+    }
+
+    .hero-content {
+        flex: 1;
+        max-width: 60%;
+    }
+
+    .hero-visual {
+        display: flex;
+        flex: 0 0 200px;
+    }
+
+    .orbit-container {
+        width: 180px;
+        height: 180px;
+    }
+
+    .hero-title {
+        font-size: clamp(1.4rem, 3.5vw, 2rem);
+        margin-bottom: 12px;
+    }
+
+    .hero-subtitle {
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+        line-height: 1.5;
+    }
+
+    .hero-badge {
+        margin-bottom: 16px;
+    }
+
+    .hero-actions {
+        justify-content: flex-start;
+        margin-bottom: 24px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 0.85rem;
+        min-height: 40px;
+    }
+
+    .hero-stats {
+        flex-direction: row;
+        justify-content: flex-start;
+        gap: 20px;
+    }
+
+    .stat-divider {
+        display: block;
+        width: 1px;
+        height: 32px;
+    }
+
+    .stat-number {
+        font-size: 1.3rem;
+    }
+
+    .stat-label {
+        font-size: 0.68rem;
+    }
+
+    .services {
+        padding: 40px 24px 60px;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .section-header {
+        margin-bottom: 32px;
+    }
+
+    .section-title {
+        font-size: 1.6rem;
+    }
+
+    .section-desc {
+        font-size: 0.88rem;
+    }
+
+    .service-card {
+        padding: 24px 20px;
+    }
+
+    .card-desc {
+        font-size: 0.82rem;
+        line-height: 1.55;
+    }
+
+    .cta-section {
+        padding: 40px 24px 60px;
+    }
+
+    .cta-container {
+        padding: 36px 32px;
+    }
+
+    .cta-actions {
+        flex-direction: row;
+    }
+
+    .btn-lg {
+        width: auto;
+    }
+
+    .footer {
+        padding: 24px 24px;
+    }
+
+    .navbar {
+        padding: 8px 0;
+    }
+
+    .navbar.scrolled {
+        padding: 6px 0;
+    }
+}
+
+/* --- Landscape tablets (medium height) --- */
+@media (min-width: 768px) and (max-width: 1024px) and (orientation: landscape) {
+    .hero {
+        flex-direction: row;
+        text-align: left;
+        padding-top: 100px;
+        min-height: 100vh;
+        min-height: 100dvh;
+        gap: 40px;
+    }
+
+    .hero-content {
+        flex: 1;
+        max-width: 55%;
+    }
+
+    .hero-visual {
+        display: flex;
+        flex: 0 0 280px;
+    }
+
+    .orbit-container {
+        width: 250px;
+        height: 250px;
+    }
+
+    .hero-actions {
+        justify-content: flex-start;
+    }
+
+    .hero-stats {
+        justify-content: flex-start;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+}
+
+/* --- Very small landscape phones (e.g. iPhone SE landscape) --- */
+@media (max-height: 400px) and (orientation: landscape) {
+    .hero {
+        padding-top: 64px;
+        padding-bottom: 24px;
+    }
+
+    .hero-title {
+        font-size: 1.3rem;
+        margin-bottom: 8px;
+    }
+
+    .hero-subtitle {
+        font-size: 0.78rem;
+        margin-bottom: 16px;
+    }
+
+    .hero-badge {
+        margin-bottom: 10px;
+    }
+
+    .hero-visual {
+        flex: 0 0 150px;
+    }
+
+    .orbit-container {
+        width: 140px;
+        height: 140px;
+    }
+
+    .navbar {
+        padding: 6px 0;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+
+    .service-card {
+        padding: 20px 16px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-desc {
+        font-size: 0.78rem;
+    }
+
+    .card-icon {
+        width: 40px;
+        height: 40px;
+        margin-bottom: 12px;
+    }
+
+    .card-icon svg {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+/* --- Tall narrow phones (e.g. Galaxy Fold outer screen) --- */
+@media (max-width: 300px) {
+    .hero-title {
+        font-size: 1.3rem;
+    }
+
+    .hero-subtitle {
+        font-size: 0.8rem;
+    }
+
+    .hero-badge {
+        display: none;
+    }
+
+    .hero-stats {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .stat {
+        flex-direction: row;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .service-card {
+        padding: 16px 14px;
+    }
+
+    .card-icon {
+        width: 36px;
+        height: 36px;
+    }
+
+    .card-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .card-title {
+        font-size: 1rem;
+    }
+
+    .card-desc {
+        font-size: 0.78rem;
+    }
+
+    .logo-text {
+        font-size: 0.82rem;
+    }
+
+    .logo-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+}
+
+/* --- Reduced motion (accessibility) --- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+
+    .bg-glow {
+        animation: none;
+    }
+
+    .orbit {
+        animation: none;
+    }
+
+    .core-glow {
+        animation: none;
+        opacity: 0.8;
+    }
+
+    .badge-dot {
+        animation: none;
+    }
+
+    .service-card {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* --- High-DPI screens (retina) — sharper borders --- */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .service-card {
+        border-width: 0.5px;
+    }
+
+    .cta-container {
+        border-width: 0.5px;
+    }
+
+    .navbar.scrolled {
+        border-bottom-width: 0.5px;
+    }
+}
+
+/* --- Print styles --- */
+@media print {
+    .bg-grid, .bg-glow, .hero-visual, .navbar {
+        display: none;
+    }
+
+    body {
+        background: #fff;
+        color: #111;
+    }
+
+    .gradient-text {
+        -webkit-text-fill-color: #6c5ce7;
+        background: none;
+    }
+
+    .service-card {
+        border: 1px solid #ddd;
+        background: #fff;
+        opacity: 1;
+        transform: none;
+        page-break-inside: avoid;
+    }
+
+    .services-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-desc, .hero-subtitle, .section-desc, .cta-desc {
+        color: #333;
+    }
+
+    .tag {
+        border: 1px solid #ccc;
+        color: #555;
     }
 }
 
@@ -988,6 +1808,13 @@ a {
     background: rgba(108, 92, 231, 0.5);
 }
 
+/* Hide scrollbar on mobile for cleaner look */
+@media (max-width: 768px) {
+    ::-webkit-scrollbar {
+        width: 4px;
+    }
+}
+
 /* ============================================
    Selection
    ============================================ */
@@ -995,4 +1822,36 @@ a {
 ::selection {
     background: rgba(108, 92, 231, 0.3);
     color: #fff;
+}
+
+/* ============================================
+   iOS-specific fixes
+   ============================================ */
+
+/* Fix 100vh issue on iOS Safari */
+@supports (-webkit-touch-callout: none) {
+    .hero {
+        min-height: -webkit-fill-available;
+    }
+
+    .nav-links {
+        height: -webkit-fill-available;
+    }
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+    -webkit-text-size-adjust: 100%;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+/* Prevent tap highlight on mobile */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Smooth momentum scrolling on iOS */
+body {
+    -webkit-overflow-scrolling: touch;
 }
